@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>赫林錯覺互動展示</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; }
+  #controls { margin: 20px auto; width: 80%; }
+  #canvas { border: 1px solid #ccc; }
+  .slider-container { margin: 10px 0; }
+  .slider-label { display: inline-block; width: 150px; text-align: right; margin-right: 10px; }
+</style>
+</head>
+<body>
+
+<h1>赫林錯覺互動展示</h1>
+
+<div id="controls">
+  <div class="slider-container">
+    <span class="slider-label">輻射線數量：</span>
+    <input type="range" id="lineCount" min="10" max="200" value="50">
+    <span id="lineCountValue">50</span>
+  </div>
+  <div class="slider-container">
+    <span class="slider-label">線條粗細：</span>
+    <input type="range" id="lineWidth" min="1" max="10" value="1">
+    <span id="lineWidthValue">1</span>
+  </div>
+  <div class="slider-container">
+    <span class="slider-label">平行線位置：</span>
+    <input type="range" id="parallelOffset" min="50" max="250" value="100">
+    <span id="parallelOffsetValue">100</span>
+  </div>
+</div>
+
+<canvas id="canvas" width="600" height="400"></canvas>
+
+<script>
+  // 獲取元素
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const lineCountSlider = document.getElementById('lineCount');
+  const lineWidthSlider = document.getElementById('lineWidth');
+  const parallelOffsetSlider = document.getElementById('parallelOffset');
+  const lineCountValue = document.getElementById('lineCountValue');
+  const lineWidthValue = document.getElementById('lineWidthValue');
+  const parallelOffsetValue = document.getElementById('parallelOffsetValue');
+
+  // 繪製函數
+  function drawIllusion() {
+    const lineCount = parseInt(lineCountSlider.value);
+    const lineWidth = parseInt(lineWidthSlider.value);
+    const parallelOffset = parseInt(parallelOffsetSlider.value);
+
+    // 更新顯示的值
+    lineCountValue.textContent = lineCount;
+    lineWidthValue.textContent = lineWidth;
+    parallelOffsetValue.textContent = parallelOffset;
+
+    // 清空畫布
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // 繪製輻射線條
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = lineWidth;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    for (let i = 0; i < lineCount; i++) {
+      const angle = (i / lineCount) * Math.PI;
+      const x = centerX + Math.cos(angle) * canvas.width;
+      const y = centerY + Math.sin(angle) * canvas.height;
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+
+    // 繪製平行線
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(0, centerY - parallelOffset);
+    ctx.lineTo(canvas.width, centerY - parallelOffset);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.moveTo(0, centerY + parallelOffset);
+    ctx.lineTo(canvas.width, centerY + parallelOffset);
+    ctx.stroke();
+  }
+
+  // 事件監聽
+  lineCountSlider.addEventListener('input', drawIllusion);
+  lineWidthSlider.addEventListener('input', drawIllusion);
+  parallelOffsetSlider.addEventListener('input', drawIllusion);
+
+  // 初始化繪製
+  drawIllusion();
+</script>
+
+</body>
+</html>
