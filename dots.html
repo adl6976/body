@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雙方框隨機黑點顯示</title>
+    <style>
+        /* 定義方框的樣式 */
+        .box {
+            width: 300px;  /* 方框寬度 */
+            height: 300px; /* 方框高度 */
+            border: 2px solid black;  /* 邊框設為黑色 */
+            position: relative;  /* 設為相對定位以放置子元素 */
+            margin: 20px;  /* 每個方框周圍的間距 */
+            float: left;  /* 讓兩個方框並排 */
+        }
+
+        /* 定義小黑點的樣式 */
+        .dot {
+            width: 5px;  /* 小黑點寬度 */
+            height: 5px; /* 小黑點高度 */
+            background-color: black;  /* 小黑點顏色為黑色 */
+            border-radius: 50%;  /* 將方形變成圓形 */
+            position: absolute;  /* 設為絕對定位以自由放置在方框中 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 用戶輸入黑點數量 -->
+    <label for="box1Dots">方框1 黑點數量:</label>
+    <input type="number" id="box1Dots" value="50" min="0"><br><br>
+    
+    <label for="box2Dots">方框2 黑點數量:</label>
+    <input type="number" id="box2Dots" value="50" min="0"><br><br>
+    
+    <!-- 生成黑點的按鈕 -->
+    <button onclick="generateDots()">生成黑點</button>
+
+    <!-- 兩個方框 -->
+    <div id="box1" class="box"></div>
+    <div id="box2" class="box"></div>
+
+    <script>
+        // 設定小黑點的大小
+        const dotSize = 5;
+
+        // 產生隨機黑點的函式
+        function generateRandomDots(boxElement, numberOfDots) {
+            // 先清空方框中的所有內容
+            boxElement.innerHTML = '';
+
+            // 迴圈依照設定的黑點數量執行
+            for (let i = 0; i < numberOfDots; i++) {
+                // 創建一個div來代表每個小黑點
+                const dot = document.createElement('div');
+                dot.classList.add('dot');  // 加入dot類別應用樣式
+                
+                // 隨機生成x, y位置 (相對於方框)
+                const x = Math.random() * (boxElement.offsetWidth - dotSize); // 確保x值不會讓黑點超出方框寬度
+                const y = Math.random() * (boxElement.offsetHeight - dotSize); // 確保y值不會讓黑點超出方框高度
+                
+                // 設定小黑點的左側和頂部位置
+                dot.style.left = `${x}px`;
+                dot.style.top = `${y}px`;
+
+                // 將小黑點添加到方框內
+                boxElement.appendChild(dot);
+            }
+        }
+
+        // 主函式，根據用戶輸入的數量生成黑點
+        function generateDots() {
+            // 獲取用戶輸入的黑點數量
+            const box1Dots = parseInt(document.getElementById('box1Dots').value);
+            const box2Dots = parseInt(document.getElementById('box2Dots').value);
+
+            // 獲取兩個方框的元素
+            const box1 = document.getElementById('box1');
+            const box2 = document.getElementById('box2');
+
+            // 為每個方框生成對應數量的黑點
+            generateRandomDots(box1, box1Dots);
+            generateRandomDots(box2, box2Dots);
+        }
+    </script>
+</body>
+</html>
